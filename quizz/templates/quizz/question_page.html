@@ -1,0 +1,77 @@
+{% extends 'quizz/base.html' %}
+{% block content %}
+
+<h2>{{ category.name }} Quiz</h2>
+
+<div class="progress" aria-hidden="true">
+    <div class="bar" style="width:{{ progress }}%"></div>
+</div>
+
+<div class="progress-wrapper">
+    <div id="progressBar" class="progress-bar"></div>
+</div>
+
+<script>
+let current = {{ current }};
+let total = {{ total }};
+let percent = (current / total) * 100;
+document.getElementById("progressBar").style.width = percent + "%";
+</script>
+
+
+<div class="meta">
+    <div class="timer" id="timer">{{ time_limit }}</div>
+    <div class="page">Question {{ page }} of {{ total_pages }}</div>
+</div>
+
+<form method="post" id="questionForm">
+    {% csrf_token %}
+    <h3>{{ question.text }}</h3>
+
+    {% for choice in question.choices.all %}
+        <label class="choice
+            {% if selected_id %}
+                {% if choice.id == correct_id %} correct
+                {% elif choice.id == selected_id %} wrong
+                {% endif %}
+            {% endif %}
+        ">
+            <input type="radio" name="answer" value="{{ choice.id }}"
+                {% if selected_id and choice.id == selected_id %} checked {% endif %}>
+            {{ choice.text }}
+        </label><br>
+    {% endfor %}
+
+    {% if not selected_id %}
+        <button type="submit" id="submitBtn">Submit</button>
+    {% else %}
+        {% if page < total_pages %}
+            <a class="next-btn" href="?page={{ page|add:1 }}">Next</a>
+        {% else %}
+            <a class="finish-btn" href="{% url 'submit_quiz' category.slug %}">Finish Quiz</a>
+        {% endif %}
+    {% endif %}
+</form>
+
+<script>
+(function() {
+    let timeLeft = {{ time_limit|default:"10" }};
+    const timerEl = document.getElementById('timer');
+    const form = document.getElementById('questionForm');
+
+    timerEl.innerText = timeLeft;
+    const t = setInterval(() => {
+        timeLeft--;
+        timerEl.innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(t);
+            form.submit();
+        }
+    }, 1000);
+})();
+</script>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="{% static 'quizz/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'quizz/auth.css' %}">
+
+</head>
+<body>
+  <header>
+    <h1><center>Welcome to the quiz</center></h1>
+    <nav><a href="{% url 'index' %}">Home</a> 
+      <a href="{% url 'leaderboard' %}">Leaderboard</a>
+      <a href="{% url 'login' %}">Login</a>
+    </nav>
+    <hr>
+  </header>
+  
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

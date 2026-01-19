@@ -1,0 +1,12 @@
+{% extends 'quizz/base.html' %}
+{% block content %}
+<h2>Select Category</h2>
+
+<ul>
+  {% for c in categories %}
+    <li><a href="{% url 'quiz' c.slug %}">{{ c.name }}</a></li>
+  {% empty %}
+    <li>No categories available. Add some questions in admin.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

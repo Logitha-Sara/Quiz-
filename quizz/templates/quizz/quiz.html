@@ -1,0 +1,80 @@
+{% extends 'quizz/base.html' %}
+{% block content %}
+
+
+<h2>Quiz — {{ category.name }}</h2>
+
+<div id="timer" class="timer">Time: {{ total_time }} sec</div>
+
+<form id="quizForm">
+  <input type="hidden" name="category_id" value="{{ category.id }}">
+
+  {% for q in questions %}
+  <div class="question-block">
+      <h3>{{ forloop.counter }}. {{ q.text }}</h3>
+
+      {% for ch in q.choices.all %}
+      <label class="choice-item">
+        <input type="radio" name="question_{{ q.id }}" value="{{ ch.id }}">
+        {{ ch.text }}
+      </label><br>
+      {% endfor %}
+  </div>
+  <hr>
+  {% endfor %}
+
+  <button type="submit">Submit Quiz</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+let timeLeft = {{ total_time }};
+let timerEl = document.getElementById("timer");
+
+let countdown = setInterval(() => {
+    timerEl.textContent = "Time: " + timeLeft + " sec";
+    timeLeft--;
+
+    if (timeLeft < 0) {
+        clearInterval(countdown);
+        document.getElementById("quizForm").submit();
+    }
+}, 1000);
+
+document.getElementById("quizForm").onsubmit = function(e) {
+    e.preventDefault();
+
+    fetch("{% url 'submit_quiz' %}", {
+        method: "POST",
+        body: new FormData(this),
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    })
+    .then(res => res.json())
+    .then(data => {
+        showResults(data.correct_answers);
+        document.getElementById("result").innerHTML =
+            `<h2>Your Score: ${data.score}/${data.total}</h2>`;
+    });
+};
+
+function showResults(correct) {
+    document.querySelectorAll(".choice-item").forEach(label => {
+        let input = label.querySelector("input");
+        let id = input.value;
+
+        if (correct.includes(id)) {
+            label.classList.add("correct");
+        }
+        else if (input.checked) {
+            label.classList.add("wrong");
+        }
+    });
+}
+</script>
+
+
+{% endblock %}
+
+
+

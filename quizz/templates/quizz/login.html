@@ -1,0 +1,29 @@
+{% extends 'quizz/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>Login</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-box">
+            <label>Username</label>
+            <input type="text" name="username" required>
+        </div>
+
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <button class="btn-primary" type="submit">Login</button>
+
+        <p class="auth-text">Don't have an account?
+            <a href="{% url 'register' %}">Register</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+

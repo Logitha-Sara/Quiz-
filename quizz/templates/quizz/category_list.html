@@ -1,0 +1,14 @@
+{% extends "quizz/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="title">Select a Category</h2>
+<div class="category-container">
+    {% for c in categories %}
+        <a class="category-card" href="{% url 'quizz:questions' c.slug %}">
+            {{ c.name }}
+        </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

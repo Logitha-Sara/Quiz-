@@ -1,0 +1,23 @@
+{% extends 'quizz/base.html' %}
+{% block content %}
+<h2>Quiz Completed!</h2>
+
+{% if message %}
+  <p>{{ message }}</p>
+{% endif %}
+
+<p>Your Score: <strong>{{ score }}</strong> / <strong>{{ total }}</strong></p>
+
+{% if results %}
+  <h3>Details</h3>
+  <ul>
+    {% for qid, item in results.items %}
+      <li>Question ID {{ qid }} — You: {{ item.selected }} — Correct: {{ item.correct }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<p><a href="{% url 'leaderboard' %}">View Leaderboard</a> 
+    <a href="{% url 'index' %}">Back to Categories</a></p>
+{% endblock %}
+

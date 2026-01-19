@@ -1,0 +1,38 @@
+{% extends "quizz/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="leaderboard-container">
+    <div class="leaderboard-card">
+
+        <h2 class="lb-title">🏆 Leaderboard</h2>
+
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Category</th>
+                <th>Score</th>
+                <th>Date</th>
+            </tr>
+
+            {% for result in results %}
+            <tr>
+                <td><a class="rank-link">{{ forloop.counter }}</a></td>
+                <td>{{ result.user.username }}</td>
+                <td>{{ result.category.name }}</td>
+                <td>{{ result.score }} </td>
+                <td>{{ result.created_at|date:"d M Y" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+
